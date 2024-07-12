@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="pos_template" inherit_id="point_of_sale.template" xml:space="preserve">
+    <t t-name="PaymentScreen" t-inherit="point_of_sale.PaymentScreen" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('paymentmethods')]" position="replace">
+            <div class="paymentmethods">
+                <t t-foreach="payment_method_by_group.group_by_id" t-as="group" t-key="group.id">
+                    <div class="button paymentmethod" style="
+                        display: block; background-color: #875A7B; color: white;">
+                        <t t-esc="group.name"/>
+                        <i class="fa fa-chevron-circle-right fa-lg rotate" aria-hidden="true" t-on-click="() => this.trigger('click-unfold', group)"
+                        style="float: right; display: flex; margin-top: 27px;" t-att-data-group="group.id"/>
+                    </div>
+                    <t t-foreach="payment_methods_from_config" t-as="paymentMethod" t-key="paymentMethod.id">
+                        <t t-if="paymentMethod.pw_category_id[0] == group.id">
+                            <div class="button paymentmethod" t-att-data-group="group.id" style="display: none;"
+                                t-on-click="() => this.trigger('new-payment-line', paymentMethod)">
+                                <div class="payment-name">
+                                    <t t-esc="paymentMethod.name" />
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                </t>
+            </div>
+        </xpath>
+    </t>
+</templates>
